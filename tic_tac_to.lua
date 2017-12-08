@@ -12,14 +12,15 @@ board = {}
 board[1] = {" ", " ", " "}
 board[2] = {" ", " ", " "}
 board[3] = {" ", " ", " "}
+OVER = false
+
 
 function greet()
   io.write("Welcome to tic-tac-toe! \nTo move, enter the row you would like to move to followed by a comma then space, then the column you would like to move to. \ne.g: 1, 2 \n")
 end
 
 function render(a_board)
-  io.write("    1     2     3     ")
-  print("")
+  io.write("    1     2     3     \n")
   for i = 1, 3, 1 do
     for j = 1, 3, 1 do
 
@@ -49,7 +50,6 @@ function render(a_board)
 end
 
 function move_piece(x, y)
-  print "moving"
   board[x][y] = current_player.symbol
   print(board[x][y])
 end
@@ -76,6 +76,7 @@ end
 function play_turn()
   moved = false
   while (moved == false) do
+
     if current_player.type == "human" then
       x, y = get_user_input()
     else
@@ -85,15 +86,23 @@ function play_turn()
       move_piece(x, y)
       x, y = nil, nil
       moved = true
+    end
+
+    if won() then
+      io.write(current_player.symbol, " wins!!!\n")
+      OVER = true
+    elseif draw() then
+      io.write("It's a Draw!\n")
+      OVER = true
+    else
       swap()
     end
+
   end
 end
 
-
 function parse(x, y)
   if string.len(x) == 1 and string.len(y) == 1 then
-
     x = tonumber(x)
     y = tonumber(y)
     return x, y
@@ -101,8 +110,66 @@ function parse(x, y)
   return false
 end
 
+
+-- win / draw / loss evaluation
+
+
+function check_hor()
+  how_win = false
+  for j = 1, 3, 1 do
+    if (board[j][1] == board[j][2]) and (board[j][1] == board[j][3]) and (board[j][1] ~= " ") then
+      hor_win = true
+      os.execute("clear")
+      render(board)
+    end
+  end
+  return hor_win
+end
+
+function check_vert()
+  vert_win = false
+  for i = 1, 3, 1 do
+    if (board[1][i] == board[2][i]) and (board[1][i] == board[3][i]) and (board[1][i] ~= " ") then
+      vert_win = true
+      os.execute("clear")
+      render(board)
+    end
+  end
+end
+
+function check_diag()
+  diag_win = false
+  if (board[1][1] == board[2][2]) and (board[1][1] == board[3][3]) and (board[1][1] ~= " ") then
+    diag_win = true
+    os.execute("clear")
+    render(board)
+  elseif (board[1][3] == board[2][2]) and (board[1][3] == board[3][1]) and (board[1][3] ~= " ") then
+    diag_win = true
+    os.execute("clear")
+    render(board)
+  end
+return diag_win
+end
+
+
 function won()
+  if check_hor() or check_vert() or check_diag() then
+    return current_player
+  end
   return false
+end
+
+function draw()
+  all_filled = true
+  for i = 1, 3, 1 do
+    for j = 1, 3, 1 do
+      if board[i][j] == " " then
+        all_filled = false
+      end
+    end
+  end
+
+  return all_filled
 end
 
 function get_user_input()
@@ -118,8 +185,6 @@ function get_user_input()
       x, y = parse(x, y)
       print(valid)
       valid = true
-      -- print(valid)
-      -- print(current_player.symbol)
     end
   end
   return x, y
@@ -128,11 +193,10 @@ end
 function play_game()
   greet()
   render(board)
-  while (won() == false) do
+  while (OVER == false) do
     play_turn()
   end
-  io.write(current_player, "wins!!!\n")
 end
 
--- render(board)
+
 play_game()
