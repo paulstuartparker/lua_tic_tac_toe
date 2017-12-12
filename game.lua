@@ -1,4 +1,3 @@
-local inspect = require 'inspect'
 local Board = require 'board'
 local Computer = require 'computer_player'
 

@@ -1,5 +1,4 @@
 local Board = require 'board'
-local inspect = require 'inspect'
 
 Computer = {}
 
