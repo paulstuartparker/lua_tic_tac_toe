@@ -15,7 +15,7 @@ function Board:flatten()
       table.insert(flat, y)
     end
   end
-return flat
+  return flat
 end
 
 
@@ -70,7 +70,6 @@ function Board:check_vert()
       vert_win = true
     end
   end
-
   return vert_win
 end
 
@@ -81,7 +80,7 @@ function Board:check_diag()
   elseif (self.grid[1][3] == self.grid[2][2]) and (self.grid[1][3] == self.grid[3][1]) and (self.grid[1][3] ~= " ") then
     diag_win = true
   end
-return diag_win
+  return diag_win
 end
 
 
@@ -102,7 +101,6 @@ function Board:draw(board)
     if flat[i] == " " then
       all_filled = false
     end
-
   end
   return all_filled
 end

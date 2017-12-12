@@ -12,7 +12,6 @@ o_mark = "  o  |"
 
 -- gameplay section
 function determine_player_type(p1, p2)
-
   if p1 == "h" then
     PLAYER_1 = {type="human", symbol="x"}
   else
@@ -42,7 +41,6 @@ function get_players()
   end
 
   determine_player_type(p1, p2)
-
   return true
 end
 
@@ -54,7 +52,6 @@ function greet()
   while got_players == false do
     got_players = get_players()
   end
-
 end
 
 
@@ -75,7 +72,6 @@ function play_turn()
       moved = true
     end
   end
-
 end
 
 function get_user_input()
@@ -136,7 +132,6 @@ function render(a_board)
       else
         io.write("     |")
       end
-
     end
     print("")
 
@@ -146,6 +141,7 @@ function render(a_board)
       end
       io.write(GRID[i][j])
     end
+
     print("")
   end
 end
