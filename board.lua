@@ -58,8 +58,6 @@ function Board:check_hor()
       hor_win = true
     end
   end
-  -- print(hor_win)
-  -- print("hor^")
   return hor_win
 end
 
@@ -73,10 +71,6 @@ function Board:check_vert()
       vert_win = true
     end
   end
-  -- print("-------")
-  -- print(inspect(self.grid))
-  -- print(vert_win)
-  -- print("vert^")
 
   return vert_win
 end
@@ -88,15 +82,11 @@ function Board:check_diag()
   elseif (self.grid[1][3] == self.grid[2][2]) and (self.grid[1][3] == self.grid[3][1]) and (self.grid[1][3] ~= " ") then
     diag_win = true
   end
-  -- print(diag_win)
-  -- print("diag^")
-
 return diag_win
 end
 
 
 function Board:won(board)
-  -- print(inspect(board.grid))
   if board:check_hor() == true or board:check_vert() == true or board:check_diag() == true then
     return true
   end
@@ -109,14 +99,12 @@ function Board:draw(board)
   end
   all_filled = true
   flat = board:flatten()
-  -- print(inspect(flat))
   for i = 1, 9, 1 do
     if flat[i] == " " then
       all_filled = false
     end
 
   end
-  -- print(all_filled, "  bool")
   return all_filled
 end
 

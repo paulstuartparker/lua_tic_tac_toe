@@ -3,54 +3,39 @@ local inspect = require 'inspect'
 
 Computer = {}
 
-function Computer:new(symbol)
-  computer = {symbol=symbol}
+function Computer:new(symbol, type)
+  computer = {symbol=symbol, type=type}
   setmetatable(computer, self)
   self.__index = self
   return computer
 end
 
 function Computer:get_computer_input(board)
-  _board = board:dup()
-  local moves = self:find_open_moves(_board)
-
-  depth = 0
-  local is_max = true
-  local best_value = -1000
+  local moves = self:find_open_moves(board)
+  local depth, is_max, best_value = 0, true, -1000
   local future_val, best_move, future
   local symbol = self.symbol
   for k, v in pairs(moves) do
-    future = _board:dup()
+    future = board:dup()
     future:move_piece(v[1], v[2], symbol)
     future_val = Computer:search_tree_for_move(future, not is_max, symbol, depth + 1)
-
     if (future_val > best_value) then
       best_value = future_val
       best_move = {v[1], v[2]}
     end
   end
-
   return best_move
 end
 
-function Computer:change_symbol(symbol)
-  if symbol == "x" then
-    return "o"
-  else
-    return "x"
-  end
-end
 
 function Computer:search_tree_for_move(future, is_max, _symbol, depth)
-
-  local symbol = Computer:change_symbol(_symbol)
 
   if Computer:over(future) == true then
     return Computer:evaluate_board(future, is_max, depth)
   end
 
   local future_val, best_val
-  local moves = Computer:find_open_moves(future)
+  local moves, symbol = Computer:find_open_moves(future), Computer:change_symbol(_symbol)
 
   if is_max then
     best_val = -1000
@@ -86,16 +71,13 @@ function Computer:over(board)
   end
 end
 
-function Computer:evaluate_board(future, is_max, depth)
-  if Board:draw(future) then
-    return 0
-  elseif is_max then
-    return -100
+function Computer:change_symbol(symbol)
+  if symbol == "x" then
+    return "o"
   else
-    return 100
+    return "x"
   end
 end
-
 
 function Computer:find_open_moves(future_board)
   local moves = {}
@@ -108,5 +90,17 @@ function Computer:find_open_moves(future_board)
   end
   return moves
 end
+
+function Computer:evaluate_board(future, is_max, depth)
+  if Board:draw(future) then
+    return 0
+  elseif is_max then
+    return -10 + depth
+  else
+    return 10 - depth
+  end
+end
+
+
 
 return Computer
